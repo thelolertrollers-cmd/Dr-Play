@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Doctor Play · taller
 
-## Getting Started
+Gestión interna del servicio técnico: reparaciones, clientes, fichaje y cuentas, más una consulta de precios para la tablet del mostrador.
 
-First, run the development server:
+## 1. Crear las tablas
+
+En Supabase el proyecto está vacío y la clave del navegador no puede crear tablas. Abre el editor SQL y pega el archivo completo `supabase/schema.sql`:
+
+https://supabase.com/dashboard/project/eosxgpwuzhrynjgjpuyl/sql/new
+
+Después, en **Authentication → Sign In / Providers → Email**, desactiva **Confirm email** para que el equipo entre sin esperar un correo.
+
+## 2. Arrancar en local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La primera cuenta, en `/registro`, será administración y no pide código. Las siguientes usan el código del taller. El código inicial es `TALLER-DP`; cámbialo en Ajustes.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 3. Pantallas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/consulta` — tablet. Consola, avería, precio y días. Si hay más reparaciones sin fecha de reparado que el umbral (5 por defecto), sube el precio y el plazo el porcentaje de Ajustes (15% por defecto).
+- `/panel` — equipo. Recepciones, filtros, fichaje y cuentas.
+- `/panel/admin` — precios, empleados, NIF, serie de factura y código de alta.
 
-## Learn More
+Los precios de la guía son una orientación inicial, con IVA incluido. Ajústalos a los vuestros: la tablet lee esos números.
 
-To learn more about Next.js, take a look at the following resources:
+## 4. Publicar en Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Conecta este proyecto a Vercel y define:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
-## Deploy on Vercel
+La tablet usa la URL pública acabada en `/consulta`. El equipo entra por `/login`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Fichajes y Verifactu
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+El fichaje guarda la hora de entrada y de salida en el servidor. Un empleado no puede cambiarla. Administración puede corregirla: se conserva la hora original y un motivo. Es una herramienta para el registro de jornada, no un asesoramiento legal.
+
+Las facturas guardan serie, número, NIF, base e IVA, y dejan hueco para la huella de Verifactu. Todavía no se envían a la Agencia Tributaria.
