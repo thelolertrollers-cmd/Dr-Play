@@ -20,7 +20,7 @@ export default function ClientesPage() {
   async function load() {
     const [clientsRes, repairsRes] = await Promise.all([
       supabase.from("clients").select("*").order("name"),
-      supabase.from("repairs").select("id, code, client_id, console, received_at, collected_at").order("received_at", { ascending: false }),
+      supabase.from("repairs").select("id, code, client_id, console, serial_number, received_at, collected_at").order("received_at", { ascending: false }),
     ]);
     if (clientsRes.error || repairsRes.error) {
       setError(humanError(clientsRes.error ?? repairsRes.error));
@@ -63,7 +63,8 @@ export default function ClientesPage() {
   const visible = clients.filter((client) => {
     const text = query.trim().toLowerCase();
     if (!text) return true;
-    return `${client.name} ${client.phone} ${client.tax_id ?? ""}`.toLowerCase().includes(text);
+    const series = repairs.filter((repair) => repair.client_id === client.id).map((repair) => repair.serial_number ?? "").join(" ");
+    return `${client.name} ${client.phone} ${client.tax_id ?? ""} ${series}`.toLowerCase().includes(text);
   });
 
   return (
@@ -85,7 +86,7 @@ export default function ClientesPage() {
         </div>
         <button className="btn btn-primary self-end">Añadir cliente</button>
       </form>
-      <input className="field mb-4" placeholder="Buscar nombre o teléfono" value={query} onChange={(event) => setQuery(event.target.value)} />
+      <input className="field mb-4" placeholder="Buscar nombre, teléfono o número de serie" value={query} onChange={(event) => setQuery(event.target.value)} />
       {visible.length === 0 ? (
         <Empty title="Sin clientes" text="Todavía no hay fichas." />
       ) : (
@@ -114,7 +115,7 @@ export default function ClientesPage() {
                     <div className="grid gap-2">
                       {history.map((repair) => (
                         <Link key={repair.id} href={`/panel/reparaciones/${repair.id}`} className="rounded-2xl bg-white/5 px-4 py-3">
-                          {repair.code} · {repair.console ?? "Consola"} · {formatDate(repair.received_at)} {repair.collected_at ? "· recogida" : "· en taller"}
+                          {repair.code} · {repair.console ?? "Consola"}{repair.serial_number ? ` · ${repair.serial_number}` : ""} · {formatDate(repair.received_at)} {repair.collected_at ? "· recogida" : "· en taller"}
                         </Link>
                       ))}
                     </div>

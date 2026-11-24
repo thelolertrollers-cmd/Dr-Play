@@ -45,6 +45,7 @@ create table if not exists public.repairs (
   code text unique,
   client_id uuid not null references public.clients (id),
   console text,
+  serial_number text,
   fault text,
   detail text,
   cost numeric(10,2) check (cost is null or cost >= 0),
@@ -762,5 +763,8 @@ grant execute on function public.correct_time_entry(uuid, timestamptz, timestamp
 grant execute on function public.create_invoice_from_repair(uuid, text) to authenticated;
 grant execute on function public.set_employee(uuid, text, boolean) to authenticated;
 grant execute on function public.update_my_name(text) to authenticated;
+
+alter table public.repairs add column if not exists serial_number text;
+create index if not exists repairs_serial_number_idx on public.repairs (serial_number);
 
 notify pgrst, 'reload schema';

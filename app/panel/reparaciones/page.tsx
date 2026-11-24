@@ -85,7 +85,7 @@ export default function ReparacionesPage() {
     return rows
       .filter((repair) => {
         const person = asOne(repair.client);
-        const haystack = `${person?.name ?? ""} ${person?.phone ?? ""} ${repair.code ?? ""} ${repair.detail ?? ""} ${repair.console ?? ""}`.toLowerCase();
+        const haystack = `${person?.name ?? ""} ${person?.phone ?? ""} ${repair.code ?? ""} ${repair.detail ?? ""} ${repair.console ?? ""} ${repair.serial_number ?? ""}`.toLowerCase();
         if (text && !haystack.includes(text)) return false;
         if (from && repair.received_at < from) return false;
         if (to && repair.received_at > to) return false;
@@ -124,7 +124,7 @@ export default function ReparacionesPage() {
         ))}
       </div>
       <div className="card mb-4 grid gap-3 p-4 lg:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">
-        <input className="field" placeholder="Nombre, teléfono, código o detalle" value={query} onChange={(event) => setQuery(event.target.value)} />
+        <input className="field" placeholder="Nombre, teléfono, código, serie o detalle" value={query} onChange={(event) => setQuery(event.target.value)} />
         <select className="field" value={range} onChange={(event) => setRange(event.target.value as Range)}>
           <option value="all">Todas las fechas</option>
           <option value="today">Recibidas hoy</option>
@@ -155,7 +155,7 @@ export default function ReparacionesPage() {
                     <Link href={`/panel/reparaciones/${repair.id}`} className="font-display text-3xl uppercase leading-none">
                       {person?.name ?? "Cliente"} <span className="text-muted">{repair.code}</span>
                     </Link>
-                    <p className="mt-1 text-sm text-muted">{person?.phone} · {formatMoney(repair.cost)} · {paymentLabel(repair.payment_method)}</p>
+                    <p className="mt-1 text-sm text-muted">{person?.phone}{repair.serial_number ? ` · ${repair.serial_number}` : ""} · {formatMoney(repair.cost)} · {paymentLabel(repair.payment_method)}</p>
                   </div>
                   <StatusPill repair={repair} />
                 </div>

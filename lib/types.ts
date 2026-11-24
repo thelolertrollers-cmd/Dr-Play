@@ -22,6 +22,7 @@ export type Repair = {
   code: string | null;
   client_id: string;
   console: string | null;
+  serial_number: string | null;
   fault: string | null;
   detail: string | null;
   cost: number | string | null;

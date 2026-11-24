@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CONSOLES, FAULTS, PAYMENTS, familyOf, FAMILIES } from "@/lib/catalog";
+import { DEVICES, FAULTS, PAYMENTS, familyOf, FAMILIES } from "@/lib/catalog";
 import { humanError } from "@/lib/errors";
 import { asNumber, daysLabel, formatMoney, madridToday } from "@/lib/format";
 import type { ClientBrief, Quote, Repair } from "@/lib/types";
@@ -23,6 +23,7 @@ export function RepairForm({ repair, onSaved }: Props) {
   const [phone, setPhone] = useState(client?.phone ?? "");
   const [taxId, setTaxId] = useState(client?.tax_id ?? "");
   const [consoleName, setConsoleName] = useState(repair?.console ?? "");
+  const [serial, setSerial] = useState(repair?.serial_number ?? "");
   const [fault, setFault] = useState(repair?.fault ?? "");
   const [detail, setDetail] = useState(repair?.detail ?? "");
   const [cost, setCost] = useState(repair?.cost == null ? "" : String(repair.cost));
@@ -109,6 +110,7 @@ export function RepairForm({ repair, onSaved }: Props) {
       const payload = {
         client_id: clientId,
         console: consoleName || null,
+        serial_number: serial.trim() || null,
         fault: fault || null,
         detail: detail.trim() || null,
         cost: parsedCost,
@@ -182,9 +184,9 @@ export function RepairForm({ repair, onSaved }: Props) {
       </section>
 
       <section className="card p-5">
-        <h2 className="font-display text-3xl uppercase">Equipo</h2>
+        <h2 className="font-display text-3xl uppercase">Dispositivo</h2>
         <div className="mt-4 flex flex-wrap gap-2">
-          {CONSOLES.map((item) => (
+          {DEVICES.map((item) => (
             <button
               key={item.name}
               type="button"
@@ -196,6 +198,10 @@ export function RepairForm({ repair, onSaved }: Props) {
               {item.name}
             </button>
           ))}
+        </div>
+        <div className="mt-4 max-w-md">
+          <Label htmlFor="serie">Número de serie</Label>
+          <input id="serie" className="field" value={serial} onChange={(event) => setSerial(event.target.value)} autoComplete="off" />
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           {FAULTS.map((item) => (

@@ -33,6 +33,14 @@ export const CONSOLES = [
   { name: "Xbox Series X", family: "xbox", order: 120 },
 ] as const;
 
+export const EXTRA_DEVICES = [
+  { name: "Móvil Android", family: "otra", order: 200 },
+  { name: "iPhone", family: "otra", order: 210 },
+  { name: "Ordenador", family: "otra", order: 220 },
+] as const;
+
+export const DEVICES = [...CONSOLES, ...EXTRA_DEVICES];
+
 export const FAULTS = [
   { name: "No enciende", order: 1, min: 2, max: 5, note: "Revisión de alimentación y placa." },
   { name: "Hace ruido", order: 2, min: 1, max: 2, note: "Limpieza, pasta térmica y control de temperatura." },
@@ -57,7 +65,7 @@ export const PRICE: Record<string, Record<string, number>> = {
 };
 
 export function familyOf(consoleName?: string | null) {
-  return CONSOLES.find((item) => item.name === consoleName)?.family ?? "otra";
+  return DEVICES.find((item) => item.name === consoleName)?.family ?? "otra";
 }
 
 export function fallbackQuote(consoleName: string, fault: string): Quote | null {

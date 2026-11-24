@@ -81,7 +81,7 @@ export default function ReparacionPage() {
       <PageTitle
         kicker={repair.code ?? "REPARACIÓN"}
         title={repair.console ?? "Sin consola"}
-        text={repair.fault ?? "Sin avería apuntada"}
+        text={[repair.fault, repair.serial_number].filter(Boolean).join(" · ") || "Sin avería apuntada"}
         action={<Link href="/panel/reparaciones" className="btn btn-ghost">Volver</Link>}
       />
       <section className="card grid gap-4 p-5">
