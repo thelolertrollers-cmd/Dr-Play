@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DEVICES, FAULTS, PAYMENTS, familyOf, FAMILIES } from "@/lib/catalog";
+import { DEVICES, FAULTS, PAYMENTS } from "@/lib/catalog";
 import { humanError } from "@/lib/errors";
 import { asNumber, daysLabel, formatMoney, madridToday } from "@/lib/format";
 import type { ClientBrief, Quote, Repair } from "@/lib/types";
@@ -184,26 +184,26 @@ export function RepairForm({ repair, onSaved }: Props) {
       </section>
 
       <section className="card p-5">
-        <h2 className="font-display text-3xl uppercase">Dispositivo</h2>
+        <h2 className="font-display text-3xl uppercase">Reparación</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="dispositivo">Dispositivo</Label>
+            <select id="dispositivo" className="field" value={consoleName} onChange={(event) => setConsoleName(event.target.value)}>
+              <option value="">Elegir</option>
+              {DEVICES.map((item) => (
+                <option key={item.name} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
+              {consoleName && !DEVICES.some((item) => item.name === consoleName) ? <option value={consoleName}>{consoleName}</option> : null}
+            </select>
+          </div>
+          <div>
+            <Label htmlFor="serie">Número de serie</Label>
+            <input id="serie" className="field" value={serial} onChange={(event) => setSerial(event.target.value)} autoComplete="off" />
+          </div>
+        </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          {DEVICES.map((item) => (
-            <button
-              key={item.name}
-              type="button"
-              className="chip"
-              data-on={consoleName === item.name}
-              style={consoleName === item.name ? { background: FAMILIES[familyOf(item.name)].color, color: "#071018" } : undefined}
-              onClick={() => setConsoleName(consoleName === item.name ? "" : item.name)}
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
-        <div className="mt-4 max-w-md">
-          <Label htmlFor="serie">Número de serie</Label>
-          <input id="serie" className="field" value={serial} onChange={(event) => setSerial(event.target.value)} autoComplete="off" />
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2">
           {FAULTS.map((item) => (
             <button
               key={item.name}
@@ -226,10 +226,6 @@ export function RepairForm({ repair, onSaved }: Props) {
             </button>
           </div>
         ) : null}
-      </section>
-
-      <section className="card p-5">
-        <h2 className="font-display text-3xl uppercase">Reparación</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="recibido">Fecha recibir</Label>
