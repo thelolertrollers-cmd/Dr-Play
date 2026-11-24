@@ -101,7 +101,7 @@ export default function FichajesPage() {
       return;
     }
     setEditing(null);
-    setMessage("Corrección guardada. La hora original se conserva.");
+    setMessage("Corrección guardada.");
     await load();
   }
 
@@ -136,7 +136,6 @@ export default function FichajesPage() {
       <PageTitle
         kicker="JORNADA"
         title="Fichajes"
-        text="La entrada y la salida las marca el sistema. Si hay un error, administración lo corrige y queda el motivo y la hora original."
       />
       {error ? <Notice tone="bad">{error}</Notice> : null}
       {message ? <Notice tone="good">{message}</Notice> : null}

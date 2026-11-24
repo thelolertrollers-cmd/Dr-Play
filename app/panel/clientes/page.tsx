@@ -68,7 +68,7 @@ export default function ClientesPage() {
 
   return (
     <div>
-      <PageTitle kicker="FICHAS" title="Clientes" text="Nombre, teléfono y el historial de consolas que han dejado." />
+      <PageTitle kicker="FICHAS" title="Clientes" />
       {error ? <div className="mb-4"><Notice tone="bad">{error}</Notice></div> : null}
       <form onSubmit={(event) => void createClient(event)} className="card mb-4 grid gap-3 p-4 md:grid-cols-4">
         <div>
@@ -87,7 +87,7 @@ export default function ClientesPage() {
       </form>
       <input className="field mb-4" placeholder="Buscar nombre o teléfono" value={query} onChange={(event) => setQuery(event.target.value)} />
       {visible.length === 0 ? (
-        <Empty title="Sin clientes" text="La ficha se crea sola al dar de alta una reparación, o desde el formulario de arriba." />
+        <Empty title="Sin clientes" text="Todavía no hay fichas." />
       ) : (
         <div className="grid gap-3">
           {visible.map((client) => {

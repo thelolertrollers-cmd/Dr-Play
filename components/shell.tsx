@@ -7,7 +7,6 @@ import { Brand } from "@/components/brand";
 import { ClockButton } from "@/components/clock";
 import { Icon } from "@/components/icons";
 import { SessionProvider, useAuthState, useSession } from "@/components/session";
-import { humanError } from "@/lib/errors";
 import { cn } from "@/lib/format";
 
 const NAV = [
@@ -138,23 +137,18 @@ export function PanelShell({ children }: { children: React.ReactNode }) {
   if (!auth.profile) {
     return (
       <Screen
-        title="Falta la base"
-        text={humanError(auth.error ?? "No hay ficha de empleado. Ejecuta supabase/schema.sql en el editor SQL de Supabase y vuelve a entrar.")}
+        title="Sin acceso"
+        text="Esta cuenta no tiene ficha en el taller. Avisa a administración."
         action={
-          <div className="flex flex-wrap justify-center gap-3">
-            <a className="btn btn-primary" href="https://supabase.com/dashboard/project/eosxgpwuzhrynjgjpuyl/sql/new" target="_blank" rel="noreferrer">
-              Abrir SQL
-            </a>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => {
-                void auth.supabase.auth.signOut().then(() => router.replace("/login"));
-              }}
-            >
-              Salir
-            </button>
-          </div>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              void auth.supabase.auth.signOut().then(() => router.replace("/login"));
+            }}
+          >
+            Salir
+          </button>
         }
       />
     );

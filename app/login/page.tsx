@@ -39,7 +39,6 @@ export default function LoginPage() {
       <div className="w-full">
         <Brand />
         <h1 className="mt-8 font-display text-6xl uppercase leading-none">Entrar</h1>
-        <p className="mt-3 text-muted">El equipo del taller entra aquí. La tablet de precios no necesita cuenta.</p>
         <form onSubmit={(event) => void submit(event)} className="mt-6 grid gap-4">
           <div>
             <Label htmlFor="email">Correo</Label>
@@ -55,10 +54,7 @@ export default function LoginPage() {
           </button>
         </form>
         <p className="mt-5 text-sm text-muted">
-          ¿Primera vez? <Link className="font-bold text-cyan" href="/registro">Crear la cuenta de administración</Link>
-        </p>
-        <p className="mt-6 text-sm text-muted">
-          Si el correo pide confirmación, en Supabase desactiva Confirm email para entrar al momento.
+          ¿Sin cuenta? <Link className="font-bold text-cyan" href="/registro">Alta del equipo</Link>
         </p>
       </div>
     </main>

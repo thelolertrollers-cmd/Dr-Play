@@ -8,7 +8,7 @@ export default function NuevaReparacionPage() {
   const router = useRouter();
   return (
     <div>
-      <PageTitle kicker="RECEPCIÓN" title="Nueva reparación" text="Cliente, teléfono, fecha de entrada y lo que haya que apuntar." />
+      <PageTitle kicker="RECEPCIÓN" title="Nueva reparación" />
       <RepairForm onSaved={(id) => router.push(`/panel/reparaciones/${id}`)} />
     </div>
   );

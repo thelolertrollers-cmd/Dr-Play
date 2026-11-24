@@ -44,7 +44,7 @@ export default function RegisterPage() {
       return;
     }
     if (!data.session) {
-      setInfo("Cuenta creada. Revisa el correo o desactiva Confirm email en Supabase para entrar sin ese paso.");
+      setInfo("Cuenta creada. Revisa el correo para confirmarla.");
       return;
     }
     router.replace("/panel");
@@ -56,9 +56,6 @@ export default function RegisterPage() {
       <div className="w-full">
         <Brand />
         <h1 className="mt-8 font-display text-6xl uppercase leading-none">Alta</h1>
-        <p className="mt-3 text-muted">
-          La primera cuenta será administración y no necesita código. Las siguientes usan el código del taller.
-        </p>
         <form onSubmit={(event) => void submit(event)} className="mt-6 grid gap-4">
           <div>
             <Label htmlFor="nombre">Nombre</Label>
@@ -74,7 +71,7 @@ export default function RegisterPage() {
           </div>
           <div>
             <Label htmlFor="codigo">Código del taller</Label>
-            <input id="codigo" className="field" value={invite} onChange={(event) => setInvite(event.target.value)} placeholder="Vacío solo en la primera cuenta" />
+            <input id="codigo" className="field" value={invite} onChange={(event) => setInvite(event.target.value)} />
           </div>
           {error ? <Notice tone="bad">{error}</Notice> : null}
           {info ? <Notice tone="warn">{info}</Notice> : null}

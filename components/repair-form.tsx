@@ -178,12 +178,11 @@ export function RepairForm({ repair, onSaved }: Props) {
             <input id="nif" className="field" value={taxId ?? ""} onChange={(event) => setTaxId(event.target.value)} placeholder="Opcional" />
           </div>
         </div>
-        {selectedId ? <p className="mt-3 text-sm text-cyan">Se actualiza la ficha que ya existe.</p> : null}
+        {selectedId ? <p className="mt-3 text-sm text-cyan">Cliente ya registrado.</p> : null}
       </section>
 
       <section className="card p-5">
         <h2 className="font-display text-3xl uppercase">Equipo</h2>
-        <p className="mt-1 text-sm text-muted">Opcional. Sirve para el listado y para proponer el precio de la guía.</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {CONSOLES.map((item) => (
             <button
@@ -215,7 +214,6 @@ export function RepairForm({ repair, onSaved }: Props) {
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/5 px-4 py-3">
             <p>
               Guía: <strong>{formatMoney(quote.price)}</strong> · {daysLabel(quote.min_days, quote.max_days)}
-              {quote.busy ? ` · cola de ${quote.pending}` : ""}
             </p>
             <button type="button" className="btn btn-ghost" onClick={() => setCost(String(asNumber(quote.price)))}>
               Usar este precio

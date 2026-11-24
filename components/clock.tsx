@@ -102,7 +102,7 @@ export function ClockButton({ large = false }: { large?: boolean }) {
         <div>
           <p className="font-display text-5xl uppercase">{openAt ? "En jornada" : "Fuera"}</p>
           <p className="mt-1 text-muted">
-            {openAt ? `Entrada a las ${formatTime(openAt)} · ${elapsed}` : "La hora la marca el sistema al pulsar."}
+            {openAt ? `Entrada a las ${formatTime(openAt)} · ${elapsed}` : "Sin fichar"}
           </p>
         </div>
         <button

@@ -75,14 +75,10 @@ export default function ContabilidadPage() {
       <PageTitle
         kicker="CUENTAS"
         title="Contabilidad"
-        text="El coste de la reparación es el precio al cliente, IVA incluido. La factura separa base y 21%."
         action={<input type="month" className="field w-auto" value={month} onChange={(event) => setMonth(event.target.value)} />}
       />
       {error ? <Notice tone="bad">{error}</Notice> : null}
-      {!settingsTax ? <Notice tone="warn">Añade el NIF del taller en Ajustes antes de conectar Verifactu. Puedes preparar facturas igualmente.</Notice> : null}
-      <Notice>
-        Verifactu queda preparado: serie, número, NIF, base, IVA y hueco para la huella. La conexión con la Agencia Tributaria llega en una fase siguiente. Estos documentos todavía no se envían.
-      </Notice>
+      {!settingsTax ? <Notice tone="warn">Falta el NIF del taller. Se añade en Ajustes.</Notice> : null}
       <section className="grid gap-3 sm:grid-cols-3">
         <article className="card p-5">
           <p className="text-xs font-extrabold tracking-[0.16em] text-muted">COBRADO EN EL MES</p>
@@ -147,13 +143,13 @@ export default function ContabilidadPage() {
             <div>
               <p className="text-xs font-extrabold tracking-[0.18em]">FACTURA {invoiceCode(active.series, active.number)}</p>
               <h2 className="font-display text-4xl uppercase">{active.issuer_name ?? "Doctor Play"}</h2>
-              <p>NIF emisor: {active.issuer_tax_id ?? "Pendiente"}</p>
+              {active.issuer_tax_id ? <p>NIF emisor: {active.issuer_tax_id}</p> : null}
             </div>
             <p>{formatDate(active.issue_date)}</p>
           </div>
           <div className="mt-5">
             <p className="font-bold">{active.client_name}</p>
-            <p>NIF cliente: {active.client_tax_id ?? "No indicado"}</p>
+            {active.client_tax_id ? <p>NIF cliente: {active.client_tax_id}</p> : null}
             <p className="mt-3">{active.description}</p>
           </div>
           <dl className="mt-5 grid max-w-sm gap-1">
@@ -161,8 +157,6 @@ export default function ContabilidadPage() {
             <div className="flex justify-between"><dt>IVA {asNumber(active.tax_rate)}%</dt><dd>{formatMoney(active.tax_amount)}</dd></div>
             <div className="flex justify-between text-xl font-bold"><dt>Total</dt><dd>{formatMoney(active.total)}</dd></div>
           </dl>
-          <p className="mt-5 text-sm">Verifactu: {active.verifactu_status === "no_conectada" ? "pendiente de conectar" : active.verifactu_status}. Huella: {active.invoice_hash ?? "—"}</p>
-          <p className="mt-2 text-xs">Documento interno. No es un envío a la AEAT hasta que se conecte Verifactu.</p>
           <div className="no-print mt-5 flex gap-2">
             <button type="button" className="btn btn-primary" onClick={() => window.print()}>Imprimir</button>
             <button type="button" className="btn btn-ghost" onClick={() => setActive(null)}>Cerrar</button>

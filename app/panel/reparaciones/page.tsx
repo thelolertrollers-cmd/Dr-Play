@@ -113,7 +113,6 @@ export default function ReparacionesPage() {
       <PageTitle
         kicker="TALLER"
         title="Reparaciones"
-        text="La más antigua queda arriba mientras sigue en el taller."
         action={<Link href="/panel/reparaciones/nueva" className="btn btn-primary">Nueva reparación</Link>}
       />
       {error ? <div className="mb-4"><Notice tone="bad">{error}</Notice></div> : null}
@@ -142,7 +141,7 @@ export default function ReparacionesPage() {
         <TriFilter label="Recogido" value={collected} onChange={setCollected} />
       </div>
       {filtered.length === 0 ? (
-        <Empty title="Nada con estos filtros" text="Prueba con En taller o crea una recepción nueva." action={<Link className="btn btn-primary" href="/panel/reparaciones/nueva">Nueva reparación</Link>} />
+        <Empty title="Sin resultados" text="No hay reparaciones con este filtro." action={<Link className="btn btn-primary" href="/panel/reparaciones/nueva">Nueva reparación</Link>} />
       ) : (
         <div className="grid gap-3">
           {filtered.map((repair) => {

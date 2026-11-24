@@ -11,17 +11,15 @@ export function humanError(error: unknown) {
   const lower = message.toLowerCase();
 
   if (lower.includes("invalid login")) return "Correo o contraseña incorrectos.";
-  if (lower.includes("email not confirmed")) {
-    return "Falta confirmar el correo. En Supabase, entra en Authentication → Sign In / Providers → Email y desactiva Confirm email.";
-  }
+  if (lower.includes("email not confirmed")) return "Falta confirmar el correo. Revisa la bandeja de entrada.";
   if (lower.includes("already registered") || lower.includes("already been registered")) {
-    return "Ese correo ya tiene cuenta. Entra desde la pantalla de acceso.";
+    return "Ese correo ya tiene cuenta.";
   }
   if (lower.includes("database error saving new user") || lower.includes("invitación")) {
-    return "No se pudo crear la cuenta. Si no es la primera, revisa el código del taller. Si es la primera, ejecuta supabase/schema.sql.";
+    return "No se pudo crear la cuenta. Revisa el código del taller.";
   }
   if (lower.includes("schema cache") || lower.includes("does not exist") || lower.includes("could not find")) {
-    return "Faltan las tablas en Supabase. Abre el editor SQL del proyecto y ejecuta supabase/schema.sql.";
+    return "No se ha podido completar. Avisa a administración.";
   }
   if (lower.includes("ya tienes un fichaje")) return "Ya tienes un fichaje abierto.";
   if (lower.includes("no tienes un fichaje")) return "No tienes un fichaje abierto.";
@@ -33,6 +31,9 @@ export function humanError(error: unknown) {
   }
   if (lower.includes("la reparación no tiene importe")) {
     return "Pon un coste antes de crear la factura.";
+  }
+  if (/schema|supabase|postgres|pgrst|jwt|relation |column |function |violates|duplicate key|stack|sql/i.test(lower)) {
+    return "No se ha podido completar. Avisa a administración.";
   }
   return message;
 }

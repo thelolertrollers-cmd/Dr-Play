@@ -15,7 +15,6 @@ export default function DashboardPage() {
   const [open, setOpen] = useState<Repair[]>([]);
   const [monthTotal, setMonthTotal] = useState(0);
   const [todayMoney, setTodayMoney] = useState(0);
-  const [total, setTotal] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const today = madridToday();
   const monthStart = `${today.slice(0, 7)}-01`;
@@ -23,17 +22,16 @@ export default function DashboardPage() {
   useEffect(() => {
     let alive = true;
     async function load() {
-      const [openRes, moneyRes, countRes] = await Promise.all([
+      const [openRes, moneyRes] = await Promise.all([
         supabase
           .from("repairs")
           .select("id, code, console, fault, cost, received_at, repaired_at, informed_at, collected_at, client:clients(name, phone)")
           .is("collected_at", null)
           .order("received_at", { ascending: true }),
         supabase.from("repairs").select("cost, collected_at").gte("collected_at", monthStart).lte("collected_at", today),
-        supabase.from("repairs").select("id", { count: "exact", head: true }),
       ]);
       if (!alive) return;
-      const failure = openRes.error || moneyRes.error || countRes.error;
+      const failure = openRes.error || moneyRes.error;
       if (failure) {
         setError(humanError(failure));
         return;
@@ -42,7 +40,6 @@ export default function DashboardPage() {
       const money = (moneyRes.data as { cost: number | string | null; collected_at: string }[] | null) ?? [];
       setMonthTotal(money.reduce((sum, row) => sum + asNumber(row.cost), 0));
       setTodayMoney(money.filter((row) => row.collected_at === today).reduce((sum, row) => sum + asNumber(row.cost), 0));
-      setTotal(countRes.count ?? 0);
     }
     void load();
     return () => {
@@ -105,7 +102,7 @@ export default function DashboardPage() {
                 </Link>
               );
             })}
-            {open.length === 0 ? <p className="text-muted">No hay consolas esperando. Buen momento para una recepción.</p> : null}
+            {open.length === 0 ? <p className="text-muted">No hay consolas en el taller.</p> : null}
           </div>
         </article>
         <article className="card p-5">
@@ -114,14 +111,6 @@ export default function DashboardPage() {
           <p className="text-muted">hoy</p>
           <p className="mt-4 font-display text-4xl">{formatMoney(monthTotal)}</p>
           <p className="text-muted">este mes, al recoger</p>
-          {profile.role === "admin" && total === 0 ? (
-            <div className="mt-6 grid gap-2 text-sm">
-              <p className="font-bold">Primeros pasos</p>
-              <Link className="text-cyan" href="/panel/admin">Revisar precios, cola y código de empleados</Link>
-              <Link className="text-cyan" href="/consulta">Abrir la consulta en la tablet</Link>
-              <Link className="text-cyan" href="/panel/reparaciones/nueva">Apuntar la primera reparación</Link>
-            </div>
-          ) : null}
         </article>
       </section>
     </div>

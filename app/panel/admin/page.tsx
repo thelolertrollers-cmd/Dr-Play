@@ -5,7 +5,7 @@ import { useSession } from "@/components/session";
 import { Label, Notice, PageTitle } from "@/components/ui";
 import { CONSOLES, FAMILIES } from "@/lib/catalog";
 import { humanError } from "@/lib/errors";
-import { asNumber, formatMoney } from "@/lib/format";
+import { asNumber } from "@/lib/format";
 import type { PriceRow, Profile, ShopSettings } from "@/lib/types";
 
 const emptyPrice = {
@@ -151,18 +151,13 @@ export default function AdminPage() {
       return;
     }
     setFresh(emptyPrice);
-    setMessage("Precio añadido. La tablet lo enseña al momento.");
+    setMessage("Precio añadido.");
     await load();
   }
 
-  const percent = asNumber(settings?.surcharge_percent);
-  const examplePrice = Math.round(119 * (1 + percent / 100));
-  const exampleMin = Math.ceil(2 * (1 + percent / 100));
-  const exampleMax = Math.ceil(5 * (1 + percent / 100));
-
   return (
     <div className="grid gap-6">
-      <PageTitle kicker="ADMINISTRACIÓN" title="Ajustes" text="Precios, empleados, datos del taller y la regla de la cola." />
+      <PageTitle kicker="ADMINISTRACIÓN" title="Ajustes" />
       {error ? <Notice tone="bad">{error}</Notice> : null}
       {message ? <Notice tone="good">{message}</Notice> : null}
 
@@ -179,8 +174,8 @@ export default function AdminPage() {
             <div className="sm:col-span-2">
               <Field label="Dirección" value={settings.address ?? ""} onChange={(value) => setSettings({ ...settings, address: value })} />
             </div>
-            <Field label="Cola a partir de" value={String(settings.pending_threshold)} onChange={(value) => setSettings({ ...settings, pending_threshold: Number(value) })} type="number" />
-            <Field label="Recargo %" value={String(settings.surcharge_percent)} onChange={(value) => setSettings({ ...settings, surcharge_percent: value })} type="number" />
+            <Field label="Subir precio a partir de" value={String(settings.pending_threshold)} onChange={(value) => setSettings({ ...settings, pending_threshold: Number(value) })} type="number" />
+            <Field label="Porcentaje de subida" value={String(settings.surcharge_percent)} onChange={(value) => setSettings({ ...settings, surcharge_percent: value })} type="number" />
             <div className="sm:col-span-2">
               <Label htmlFor="codigo">Código para nuevos empleados</Label>
               <div className="flex gap-2">
@@ -198,10 +193,6 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
-          <p className="text-sm text-muted">
-            Si hay más de {settings.pending_threshold} consolas sin fecha de reparado, la tablet sube precio y días un {percent}%. Ejemplo PS5 que no enciende: de 119 € y 2-5 días pasa a {formatMoney(examplePrice)} y {exampleMin}-{exampleMax} días.
-          </p>
-          <p className="text-sm text-muted">El empleado nuevo entra en Alta con este código. La primera cuenta del sistema no lo necesita.</p>
           <button type="button" className="btn btn-primary w-fit" onClick={() => void saveSettings()}>Guardar ajustes</button>
         </section>
       ) : null}
@@ -234,7 +225,6 @@ export default function AdminPage() {
           <h2 className="font-display text-3xl uppercase">Guía de precios</h2>
           <button type="button" className="btn btn-primary" onClick={() => void savePrices()}>Guardar precios</button>
         </div>
-        <p className="text-sm text-muted">Importes orientativos con IVA incluido. Cámbialos a los vuestros: la tablet usa estos números.</p>
         {groups.map(([consoleName, rows]) => (
           <details key={consoleName} className="card p-4">
             <summary className="cursor-pointer font-display text-2xl uppercase" style={{ color: FAMILIES[rows[0]?.console_family ?? "otra"].color }}>

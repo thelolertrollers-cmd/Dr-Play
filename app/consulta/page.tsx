@@ -16,15 +16,11 @@ export default function ConsultaPage() {
   const [catalog, setCatalog] = useState<CatalogItem[] | null>(null);
   const [shop, setShop] = useState({ shop_name: "Doctor Play", phone: "614 121 568", address: "Getafe" });
   const [quote, setQuote] = useState<Quote | null>(null);
-  const [offline, setOffline] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
     void supabase.rpc("list_catalog").then(({ data, error }) => {
-      if (error || !Array.isArray(data)) {
-        setOffline(true);
-        return;
-      }
+      if (error || !Array.isArray(data)) return;
       setCatalog(data as CatalogItem[]);
     });
     void supabase.rpc("shop_public").then(({ data }) => {
@@ -69,11 +65,9 @@ export default function ConsultaPage() {
     const supabase = createClient();
     const { data, error } = await supabase.rpc("quote_repair", { p_console: consoleName, p_fault: nextFault });
     if (error || !data || typeof data !== "object" || !(data as Quote).found) {
-      setOffline(true);
       setQuote(local);
       return;
     }
-    setOffline(false);
     setQuote({ ...(data as Quote), live: true });
   }
 
@@ -161,19 +155,6 @@ export default function ConsultaPage() {
             {quote?.price != null ? formatMoney(quote.price) : "—"}
           </h1>
           <p className="mt-3 text-2xl text-white/90">{daysLabel(quote?.min_days, quote?.max_days)}</p>
-          {quote?.busy ? (
-            <p className="mt-5 rounded-3xl border border-magenta/40 bg-magenta/10 px-5 py-4 text-lg font-semibold text-magenta">
-              Hay {quote.pending} consolas por reparar. Hoy el presupuesto y el plazo suben un {quote.surcharge_percent}%.
-              {quote.base_price != null ? ` La guía base era ${formatMoney(quote.base_price)}.` : ""}
-            </p>
-          ) : quote?.live ? (
-            <p className="mt-5 text-muted">
-              Cola actual: {quote.pending ?? 0} por reparar. El recargo entra cuando hay más de {quote.threshold ?? 5}.
-            </p>
-          ) : null}
-          {offline ? (
-            <p className="mt-4 text-amber">Guía inicial, sin la cola real del taller. Conecta las tablas para que el precio se ajuste solo.</p>
-          ) : null}
           {quote?.notes ? <p className="mt-4 max-w-2xl text-lg text-muted">{quote.notes}</p> : null}
           <p className="mt-4 max-w-2xl text-sm text-muted">Presupuesto orientativo, IVA incluido. El técnico lo confirma antes de reparar.</p>
           <div className="mt-8 flex flex-wrap gap-3">
